@@ -2,7 +2,7 @@ import json
 import requests
 from flask import Flask, request, Response
 from flask_cors import CORS
-from constants import STORAGE_SERVICE_URL, DOWNLOAD_FILE_ENDPOINT, CREATE_FILE_ENDPOINT, UPDATE_FILE_ENDPOINT, DELETE_FILE_ENDPOINT, MATCH_FILE_ENDPOINT
+from constants import REST_API_PORT, STORAGE_SERVICE_URL, DOWNLOAD_FILE_ENDPOINT, CREATE_FILE_ENDPOINT, UPDATE_FILE_ENDPOINT, DELETE_FILE_ENDPOINT, MATCH_FILE_ENDPOINT
 
 app = Flask(__name__)
 CORS(app)
@@ -18,8 +18,8 @@ def handle_preflight():
 @app.route('/api/read', methods=['GET'])
 def download_file():
     parameters = {
-        fileName: request.args.get('fileName'),
-        storageType: 'CLOUD' if request.args.get('isCloud') else 'LOCAL',
+        'fileName': request.args.get('fileName'),
+        'storageType': 'CLOUD' if request.args.get('isCloud') else 'LOCAL',
     }
     resp = requests.get(STORAGE_SERVICE_URL + DOWNLOAD_FILE_ENDPOINT, json=parameters).content
     print('Response from Storage Service: ')
@@ -30,8 +30,8 @@ def download_file():
 @app.route('/api/deleteFile', methods=['DELETE'])
 def delete_file():
     parameters = {
-        fileName: request.args.get('fileName'),
-        storageType: 'CLOUD' if request.args.get('isCloud') else 'LOCAL',
+        'fileName': request.args.get('fileName'),
+        'storageType': 'CLOUD' if request.args.get('isCloud') else 'LOCAL',
     }
     resp = requests.delete(STORAGE_SERVICE_URL + DELETE_FILE_ENDPOINT, json=parameters).content
     print('Response from Storage Service: ')
@@ -67,8 +67,8 @@ def create_file():
 @app.route('/api/match-filename', methods=['GET'])
 def get_files():
     parameters = {
-        regexp: request.args.get('regexp'),
-        storageType: 'CLOUD' if request.args.get('isCloud') else 'LOCAL',
+        'regexp': request.args.get('regexp'),
+        'storageType': 'CLOUD' if request.args.get('isCloud') else 'LOCAL',
     }
     resp = requests.get(STORAGE_SERVICE_URL + MATCH_FILE_ENDPOINT, json=parameters).content
     print('Response from Storage Service: ')
@@ -77,4 +77,4 @@ def get_files():
 
 
 if __name__ == '__main__':
-   app.run(port=3000)
+   app.run(port=REST_API_PORT)
